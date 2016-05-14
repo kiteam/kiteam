@@ -36,7 +36,8 @@
     "url": "https://github.com/wvv8oo/kiteam/issues"
   },
   "scripts": {
-    "start": "node-dev ./src/app.coffee"
+    "build": "./node_modules/coffee-script/bin/coffee --compile --output lib/ src/",
+    "start": "node-dev ./src/index.coffee"
   },
   "devDependencies": {
     "transfer-webpack-plugin": "^0.1.4"
