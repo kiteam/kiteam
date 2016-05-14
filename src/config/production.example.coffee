@@ -1,50 +1,40 @@
-module.exports = {
-  "database": {
+module.exports =
+  "database":
     "client": "mysql",
-    "connection": {
+    "connection":
       "host": "localhost",
       "user": "root",
       "password": "123456",
       "database": "bhf"
-    }
-  },
-  "redis": {
+  "redis":
     "server": "localhost",
     "port": 6379,
     "database": 0,
     "unique": "bhf-kiteam"
-  },
-  "gitlab": {
+  "gitlab":
     "hooks": "http://xxxxx",
     "url": "http://git.xxxx.com",
     "token": "xxxxxx",
     "api": "http://git.xxx.com/api/v3",
-    "database": {
+    "database":
       "host": "localhost",
       "user": "gitlab",
       "password": "gitlab",
       "database": "gitlabhq"
-    }
-  },
-  "storage": {
+  "storage":
     "base": "./storage",
     "avatar": "avatar",
     "assets": "assets",
     "uploads": "uploads",
     "uploadTemporary": "uploadTemporary"
-  },
-  "notification": {
+  "notification":
     "email": true,
-    "weixin": true,
     "client": true,
     "webhook": true
-  },
   "rootAPI": "/api/",
   "port": 8001,
   "allowRegister": true,
-  "thumbnail": {
+  "thumbnail":
     "width": 100,
     "height": 80
-  },
-  "host": "http://bhf.hunantv.com/"
-}
+  "host": "http://demo.kiteam.org/"
