@@ -3,15 +3,21 @@
 ###
 _path = require 'path'
 _crypto = require 'crypto'
-_fs = require 'fs-extra'
+_util = require 'util'
 _events = require 'events'
+
+_fs = require 'fs-extra'
 _ = require 'lodash'
+_mime = require 'mime'
 
 ENVISDEV = (->process.env.NODE_ENV is 'development')()
-WORKSPACE = "./config/#{process.env.NODE_ENV || 'development'}"
-_config = require WORKSPACE
-_util = require 'util'
-_mime = require 'mime'
+CONFIG_FILE = _path.join(__dirname, "../#{process.env.NODE_ENV || 'development'}.config")
+
+if not _fs.existsSync(CONFIG_FILE)
+  console.log "配置文件#{CONFIG_FILE}不存在，请检查".red
+  process.exit 1
+
+_config = require CONFIG_FILE
 _pageEvent = new _events.EventEmitter()
 
 #触发事件
@@ -32,7 +38,7 @@ _config.assets = exports.storagePath 'assets'
 _config.uploads = exports.storagePath 'uploads'
 _config.uploadTemporary = exports.storagePath 'uploadTemporary'
 
-console.log "Workspace -> #{WORKSPACE}"
+console.log "Config file -> #{CONFIG_FILE}"
 console.log "Uploads -> #{_config.uploads}"
 console.log "uploadTemporary -> #{_config.uploadTemporary}"
 
