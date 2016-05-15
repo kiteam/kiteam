@@ -10,6 +10,7 @@ _entity = require './entity'
 _memberBiz = require './biz/member'
 _realtime = require './notification/realtime'
 _cache = require './cache'
+_staticRouter = require './config/routers/static'
 
 getMemberWithToken = (token, cb)->
   _entity.token.findMemberId token, (err, member)->
@@ -62,9 +63,18 @@ getMember = (req, cb)->
 
   getMemberWithSession req, cb
 
-#特殊路由
-specialRouter = (app)->
-  app.get '/', (req, res, next)-> res.sendfile 'static/index.html'
+
+#初始化静太路由
+initStaticRouter = (app, router)->
+  app.get router.path, (req, res, next)->
+    target = router.to.replace(/\$(\d+)/g, (all, index)->
+      return req.params[parseInt(index) - 1]
+    )
+    res.sendfile target
+
+#初始化静态路由列表
+initStaticRouters = (app)->
+  _staticRouter.forEach (router)-> initStaticRouter app, router
 
 ensureDirectory = ()->
   if process.env.NODE_ENV is 'production'
@@ -169,6 +179,6 @@ module.exports = (app)->
   console.log "Staring..."
   ensureDirectory()
   initRealtime app
-  specialRouter app
+  initStaticRouters app
   initBijou app
 
