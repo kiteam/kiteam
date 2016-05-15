@@ -177,10 +177,15 @@ initRealtime = (app)->
 #
 #    socket.on 'disconnect', -> #console.log this
 
+#默认的路由，转到首页
+initDefaultRouter = (app)->
+  target = _path.join __dirname, '../static/index.html'
+  app.get '*', (req, res, next)-> res.send target
+
 module.exports = (app)->
   console.log "Staring..."
   ensureDirectory()
   initRealtime app
   initStaticRouters app
   initBijou app
-
+  initDefaultRouter app
