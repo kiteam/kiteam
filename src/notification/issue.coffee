@@ -61,7 +61,7 @@ exports.getIssueAndFollowers = getIssueAndFollowers = (sender, issue_id, issue_s
         followers = _.uniq followers
 
         #去掉当前用户
-        _.remove followers, (current)-> current is sender.id
+        _.remove followers, (current)-> current is sender?.id
         result.followers = followers
         done err
   )
@@ -122,6 +122,9 @@ sendToOwner = (sender, receiver, isChangeExpire, title, plan_finish_time, link)-
 exports.takeTask = (sender_id, issue_id, isChangeExpire, issue_split_id)->
   eventName = _streamEvt.issueAssigned
   sender = _cache.member.get sender_id
+
+  #没有找到sender
+  return if not sender
 
   getIssueAndFollowers sender, issue_id, issue_split_id, (err, result)->
     return if err or not result.issue
