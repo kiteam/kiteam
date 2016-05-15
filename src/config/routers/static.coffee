@@ -9,7 +9,7 @@ module.exports =[
     to: '../static/index.html'
   }
   {
-    path: /^\/(js|package|fonts|images)\/(.+)$/i
+    path: /^\/(js|package|fonts|images|css)\/(.+)$/i
     to: '../static/$1/$2'
   }
 ]
