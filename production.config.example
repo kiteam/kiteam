@@ -1,40 +1,55 @@
-module.exports =
-  "database":
+module.exports = {
+  //目前只支持mysql数据，理论上可以支持sqlite，但目前还没有测试
+  "database": {
     "client": "mysql",
-    "connection":
+    "connection": {
       "host": "localhost",
       "user": "root",
       "password": "123456",
-      "database": "bhf"
-  "redis":
+      "database": "kiteam"
+    }
+  },
+  "redis": {
     "server": "localhost",
     "port": 6379,
     "database": 0,
     "unique": "bhf-kiteam"
-  "gitlab":
+  },
+  "gitlab": {
     "hooks": "http://xxxxx",
     "url": "http://git.xxxx.com",
     "token": "xxxxxx",
     "api": "http://git.xxx.com/api/v3",
-    "database":
+    "database": {
       "host": "localhost",
       "user": "gitlab",
       "password": "gitlab",
       "database": "gitlabhq"
-  "storage":
+    }
+  },
+  "storage": {
+    //考虑到维护，不建议放在当前目录，比如可以放到 /data/kiteam/storage
     "base": "./storage",
     "avatar": "avatar",
     "assets": "assets",
     "uploads": "uploads",
     "uploadTemporary": "uploadTemporary"
-  "notification":
+  },
+  //全局的通知配置
+  "notification": {
     "email": true,
     "client": true,
     "webhook": true
+  },
+  //API的根地址，除非特殊需要，不建议修改
   "rootAPI": "/api/",
   "port": 8001,
+  //是否允许用户注册
   "allowRegister": true,
-  "thumbnail":
+  "thumbnail": {
     "width": 100,
     "height": 80
+  },
+  //你的主机名，注意以/结尾
   "host": "http://demo.kiteam.org/"
+};
