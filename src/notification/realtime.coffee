@@ -17,6 +17,8 @@ getProjectRoomName = (project_id)-> "project_#{project_id}"
 joinToMyProject = (member_id)->
   socket = _online[member_id]
   projects = _cache.projectMember.getProjects member_id
+  return if not projects
+
   #加入用户到不同的项目房间
   socket.join getProjectRoomName(project_id) for project_id in projects
 
