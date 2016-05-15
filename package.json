@@ -37,7 +37,8 @@
   },
   "scripts": {
     "build": "./node_modules/coffee-script/bin/coffee --compile --output lib/ src/",
-    "start": "node-dev ./src/index.coffee"
+    "dev": "node-dev ./src/index.coffee",
+    "start": "NODE_ENV=production node ./lib/index.js"
   },
   "devDependencies": {
     "transfer-webpack-plugin": "^0.1.4"
