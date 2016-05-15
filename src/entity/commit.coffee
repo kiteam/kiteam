@@ -1,5 +1,6 @@
 _BaseEntity = require('bijou').BaseEntity
 _async = require 'async'
+_knex = require 'knex'
 
 class Commit extends _BaseEntity
   constructor: ()->
@@ -20,7 +21,7 @@ class Commit extends _BaseEntity
       pagination: pagination
       fields: (query)->
         fields = '*, (SELECT realname FROM member WHERE A.creator = member.id) AS realname'
-        query.select(query.knex.raw(fields))
+        query.select(_knex.raw(fields))
 
     @find cond, options, cb
 

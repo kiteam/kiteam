@@ -8,6 +8,7 @@ _common = require '../common'
 _memberEntity = require './member'
 _projectMemberEntity = require './project_member'
 _teamMemberEntity = require './team_member'
+_knex = require 'knex'
 
 #定义一个Project类
 class Issue extends _BaseEntity
@@ -54,7 +55,7 @@ class Issue extends _BaseEntity
         fields = "A.*, (SELECT realname FROM member WHERE member.id = A.owner) AS owner_name,
                 				          (SELECT realname FROM member WHERE member.id = A.creator) AS creator_name,
                 				          (SELECT title FROM project WHERE project.id = A.project_id) AS project_name"
-        query.select query.knex.raw(fields)
+        query.select _knex.raw(fields)
 
       #在查询之前，对query再处理
       beforeQuery: (query, isCount)->
@@ -100,7 +101,7 @@ class Issue extends _BaseEntity
           query.where(->
             this.where 'owner', cond.member_id
             this.orWhere 'creator', cond.member_id
-            this.whereIn 'A.id', query.knex.raw("SELECT issue_id FROM issue_split WHERE owner = #{cond.member_id}")
+            this.whereIn 'A.id', _knex.raw("SELECT issue_id FROM issue_split WHERE owner = #{cond.member_id}")
           )
         if cond.follow
           query.where 'C.member_id', cond.member_id
@@ -123,7 +124,7 @@ class Issue extends _BaseEntity
                 									else 4
                 									end"
 
-        query.orderBy query.knex.raw(orderBy), 'asc'
+        query.orderBy _knex.raw(orderBy), 'asc'
         query.orderBy 'timestamp', 'DESC'
 
 #        console.log query.toString()

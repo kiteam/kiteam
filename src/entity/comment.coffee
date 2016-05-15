@@ -3,6 +3,7 @@
 ###
 _BaseEntity = require('bijou').BaseEntity
 _async = require 'async'
+_knex = require 'knex'
 
 #定义一个Project类
 class Comment extends _BaseEntity
@@ -15,7 +16,7 @@ class Comment extends _BaseEntity
     options =
       orderBy: timestamp: orderByTimestamp
       fields: (query)->
-        query.select query.knex.raw('*, (SELECT realname FROM member WHERE member.id = A.creator) AS creator_name')
+        query.select _knex.raw('*, (SELECT realname FROM member WHERE member.id = A.creator) AS creator_name')
       pagination: pagination
 
     @find condition, options, cb
