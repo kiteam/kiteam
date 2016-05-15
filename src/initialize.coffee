@@ -180,7 +180,7 @@ initRealtime = (app)->
 #默认的路由，转到首页
 initDefaultRouter = (app)->
   target = _path.join __dirname, '../static/index.html'
-  app.get '*', (req, res, next)-> res.send target
+  app.get '*', (req, res, next)-> res.sendfile target
 
 module.exports = (app)->
   console.log "Staring..."
