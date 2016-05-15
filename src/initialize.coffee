@@ -70,6 +70,8 @@ initStaticRouter = (app, router)->
     target = router.to.replace(/\$(\d+)/g, (all, index)->
       return req.params[parseInt(index) - 1]
     )
+
+    target = _path.join __dirname, target
     res.sendfile target
 
 #初始化静态路由列表
