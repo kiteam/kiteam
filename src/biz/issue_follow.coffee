@@ -20,6 +20,12 @@ exports.save = (client, cb)->
 
   queue = []
 
+  queue.push(
+    (done)->
+      project_id = client.params.project_id
+      _guard.projectPermission project_id, client.member,  '*', (err, allow)->
+        done err
+  )
   #检测是否存在关注关系
   queue.push(
     (done)->
