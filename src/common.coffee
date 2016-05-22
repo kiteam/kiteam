@@ -147,10 +147,16 @@ exports.enumerate =
   gitMapType:
     project: "project"
     member: "member"
+  #项目标识
   projectFlag:
     wiki: 1
     service: 2
     normal: 0
+  #项目访问级别
+  visibilityLevel:
+    private: 0
+    public: 20
+    internal: 10
   streamEventName:
     assetPost: 'issue:asset:post'
     commentPost: 'issue:comment:post'

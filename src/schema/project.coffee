@@ -12,3 +12,4 @@ exports.schema =
     status: ""
     options: "text"
     flag: 'integer'
+    visibility_level: {type: 'integer', default: 0}
