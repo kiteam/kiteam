@@ -18,7 +18,7 @@ getMemberWithToken = (token, cb)->
       member_id: member?.id
       role: member?.role
 
-    member.isLogin = Boolean(member.member_id)
+    member.isLogin = member.member_id > 0
     cb member
 
 #记住用户密码
@@ -50,7 +50,7 @@ getMemberWithSession = (req, cb)->
   member =
     role: req.session.role
     member_id: member_id
-    isLogin: Boolean(member_id)
+    isLogin: member_id > 0
     gitlab_token: req.session.gitlab_token
 
   cb member
