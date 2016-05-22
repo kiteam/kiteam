@@ -46,6 +46,8 @@ module.exports = {
   "port": 8001,
   //是否允许用户注册
   "allowRegister": true,
+  //开户访客模式，如果开启此功能，用户可以访问设置为公开的项目，但用户只能读取
+  "guestModel": false,
   "thumbnail": {
     "width": 100,
     "height": 80
