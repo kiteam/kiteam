@@ -37,3 +37,4 @@ vendor.zip
 storage
 development.config
 lib
+/static
