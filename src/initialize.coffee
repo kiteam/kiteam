@@ -40,7 +40,7 @@ getMemberWithRemember = (req, cb)->
 #从session中获取member
 getMemberWithSession = (req, cb)->
   #从session中读取token
-  member_id = req.session.member_id || 0
+  member_id = req.session.member_id || -1
 
   #如果用户没有登录，则判断是否有记住密码
   if not member_id
@@ -124,7 +124,9 @@ initBijou = (app)->
         cb null, client
     #请求访问许可
     requestPermission: (client, router, action, cb)->
-      allow =  _.indexOf(router.anonymity || [], action) >= 0 || client.member.isLogin
+      allow =  _common.config.guestModel || #访客模式
+        _.indexOf(router.anonymity || [], action) >= 0 ||   #允许匿名访问
+        client.member.isLogin #用户已经登录
       cb null, allow
 
   _bijou.initalize(app, options)
