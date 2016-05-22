@@ -109,6 +109,9 @@ class Project extends _BaseEntity
     rightTable += " AND M.member_id = #{cond.member_id}" if cond.member_id
     rightTable += " AND M.role = '#{cond.role}'" if cond.role
     rightTable += " OR P.flag = 1" if cond.special
+    #允许获取公开的项目
+    rightTable += " OR visibility_level = #{_common.enumerate.visibilityLevel.public}"
+    #团队内的项目还没有
     rightTable += ') AS tmp'
 
     #最新版本的id
