@@ -65,7 +65,7 @@ module.exports = [
     path: 'session'
     suffix: false
     biz: 'member'
-    methods:  post: '{signIn}', put: 0, delete: '{signOut}', get: '{currentMember}', patch: 0
+    methods:  post: '{signIn}', put: 0, delete: '{signOut}', get: 'currentMember', patch: 0
     anonymity: ['post', 'delete']
   }
 

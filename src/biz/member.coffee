@@ -243,11 +243,14 @@ exports.addMember = (client, cb)->
     _notifier.welcome data.email, data.realname
 
 #获取当前用户
-exports.currentMember = (req, res, cb)->
-  res.json
-    member_id: req.session.member_id
-    username: req.session.username
-    role: req.session.role
+exports.currentMember = (client, cb)->
+  result =
+    member_id: client.member.member_id
+    username: client.member.username
+    role: client.member.role
+    isLogin: client.member.isLogin
+
+  cb null, result
 
 #获取用户列表
 exports.allMember = (client, cb)->
