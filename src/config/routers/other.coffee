@@ -34,6 +34,7 @@ module.exports = [
     path: 'message'
     biz: 'notification'
     methods:  post: 0, put: 'readMessage', delete: 0, patch: 0, get: 'getMessage'
+    allowGuest: ['get']
   }
 
   {

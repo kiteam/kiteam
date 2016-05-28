@@ -3,6 +3,7 @@ module.exports = [
     path: 'project/:project_id(\\d+)/member'
     biz: 'project'
     methods: delete: 'removeMember', put: 'addMember', post: 'addMember', get: 'getMembers'
+    allowGuest: ['get']
   },
 #  {
 #  #查看某个项目下的所有commit
@@ -25,6 +26,7 @@ module.exports = [
     path: 'project/:project_id(\\d+)/assets'
     biz: 'asset'
     methods: post: '{uploadFile}', delete: 'remove', patch: 0, put: 0
+    allowGuest: ['get']
   },
 
   {
@@ -67,16 +69,19 @@ module.exports = [
     path: 'project/:project_id(\\d+)/discussion'
     biz: 'issue'
     methods: put: 0, post: 0, delete: 0, patch: 0, get: 'getDiscussion'
+    allowGuest: ['get']
   }
   {
   #项目分类
     path: 'project/:project_id/category'
     biz: 'issue_category'
+    allowGuest: ['get']
   },
   {
   #项目版本
     path: 'project/:project_id/version'
     biz: 'version'
+    allowGuest: ['get']
   }
   {
   #上传文件，用于评论中的附件
@@ -88,6 +93,7 @@ module.exports = [
   {
   #路由地址
     path: 'project'
+    allowGuest: ['get']
   },
   {
     #收藏项目
@@ -112,6 +118,7 @@ module.exports = [
     biz: 'git_map'
     data: type: 'project'
     methods: get: 'getAllGitsInProject', put: 'addGitToProject', post: 'createGitForProject', delete: 'delOne'
+    allowGuest: ['get']
   }
   {
     #fork项目

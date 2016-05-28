@@ -21,7 +21,6 @@ module.exports = [
     suffix: false
     biz: 'member'
     methods: post: 0, put: 0, delete: 0, get: 'resetPassword', patch: 0
-    anonymity: ['get']
   }
   {
     #请求用户的tokey
@@ -37,6 +36,7 @@ module.exports = [
     biz: 'member'
     anonymity: ['post']
     methods: get: 'allMember', put: 0, delete: 0, post: 'addMember', patch: 0
+    allowGuest: ['get']
   }
 #  {
 #    #用户发送邮件通知
@@ -52,7 +52,7 @@ module.exports = [
     methods: get: 'profile', put: 'saveProfile', delete: 0, post: 0, patch: 0
   }
   {
-#用于获取用户的信息，一般用于管理或者用户的profile
+  #获取用户的头像
     path: 'account/avatar/:member_id(\\d+)?'
     suffix: false
     biz: 'member'
@@ -61,12 +61,12 @@ module.exports = [
   }
 
   {
-#用户登录注册s
+    #用户登录注册
     path: 'session'
     suffix: false
     biz: 'member'
     methods:  post: '{signIn}', put: 0, delete: '{signOut}', get: 'currentMember', patch: 0
-    anonymity: ['post', 'delete']
+    anonymity: ['post', 'delete', 'get']
   }
 
   {
