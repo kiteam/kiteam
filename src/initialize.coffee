@@ -78,32 +78,6 @@ initStaticRouter = (app, router)->
 initStaticRouters = (app)->
   _staticRouter.forEach (router)-> initStaticRouter app, router
 
-ensureDirectory = ()->
-  if process.env.NODE_ENV is 'production'
-    console.log '警告：当前运行在产品环境下'
-
-  #确保文件夹都在
-  _fs.ensureDirSync _common.config.uploads
-  _fs.ensureDirSync _common.config.assets
-  _fs.ensureDirSync _common.config.uploadTemporary
-
-#创建一个默认的会员帐号
-initRootMember = (cb)->
-  password = '888888'
-  data =
-    username: 'root'
-    realname: '管理员'
-    password: _common.md5 password
-    role: 'a'
-    status: 'new'
-    email: 'yourname@example.org'
-
-  #检查member库中是否有用户
-  _entity.member.count {}, (err, count)->
-    return cb null if count > 0
-    console.log "username: #{data.username}; password: #{password}"
-    _entity.member.save data, (err)-> cb err
-
 #初始化bijou
 initBijou = (app)->
   #console.log _moment
@@ -137,11 +111,6 @@ initBijou = (app)->
       #扫描schema，并初始化数据库
       schema = _path.join __dirname, './schema'
       _bijou.scanSchema schema, done
-  )
-
-  #如果没有用户，则创建一个root用户
-  queue.push(
-    (done)-> initRootMember done
   )
 
   #加载缓存
@@ -186,7 +155,6 @@ initDefaultRouter = (app)->
 
 module.exports = (app)->
   console.log "Staring..."
-  ensureDirectory()
   initRealtime app
   initStaticRouters app
   initBijou app
