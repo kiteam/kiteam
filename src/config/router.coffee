@@ -1,25 +1,66 @@
-###
-  路由规则
-    {
-      #paths优先，比path的优先级高
-      paths: {
-        #如果没有指定具体的curd，则会使用all这个路由
-        all: '#{rootAPI}someURL'
-        #这个会优先于all
-        get: '/asset/:project_id(\\d+)/:filename'
-      },
-      #指定一个path，这个和paths是互斥的
-      path: 'commit'
-      #用于指定将要处理的业务逻辑文件，对应biz文件夹下的具体文件
-      biz: 'commit'
-      #指定允许匿名的方法
-      anonymity: ['post']
-      #为删除指定方法，则put/get将不会被处理，如果是用{}包裹起来，则会传递req,res
-      methods: delete: 'deleteMethod', put: false, get: '{getMethod}'
-    },
-###
+_path = require("path")
+_entity = require '../entity'
+_staticRouter = require './routers/static'
+_common = require '../common'
 
-module.exports = [].concat(
+#获取静态文件的路径
+getStaticFile = (file)->
+  _path.join _path.dirname(require.main.filename), '../', file
+
+#初始化静态路由
+initStaticRouter = (app, router)->
+  app.get router.path, (req, res, next)->
+    target = router.to.replace(/\$(\d+)/g, (all, index)->
+      return req.params[parseInt(index) - 1]
+    )
+
+    res.sendfile getStaticFile(target)
+
+#根据token获取用户
+getMemberWithToken = (token, cb)->
+  _entity.token.findMemberId token, (err, member)->
+    member =
+      member_id: member?.id
+      role: member?.role
+
+    member.isLogin = member.member_id > 0
+    cb member
+
+#记住用户密码
+getMemberWithRemember = (req, cb)->
+  member = member_id: 0, isLogin: false
+  member_id = req.cookies.member_id
+  return cb member if not member_id
+
+  #从数据库中查找
+  _entity.member.findById member_id, (err, result)->
+    return cb member if err or not result
+
+    _memberBiz.setSession req, result
+    member.member_id = result.id
+    member.role = result.role
+    member.isLogin = true
+    cb member
+
+#从session中获取member
+getMemberWithSession = exports.getMemberWithSession = (req, cb)->
+  #从session中读取token
+  member_id = req.session.member_id || -1
+
+  #如果用户没有登录，则判断是否有记住密码
+  if not member_id
+    return getMemberWithRemember req, cb if req.cookies.remember and req.cookies.member_id
+
+  #直接从session获取
+  member =
+    role: req.session.role
+    member_id: member_id
+    isLogin: member_id > 0
+    gitlab_token: req.session.gitlab_token
+  cb member
+
+#获取所有的API路由列表
+exports.all = [].concat(
   require('./routers/member'),
   require('./routers/issue'),
   require('./routers/project'),
@@ -27,57 +68,20 @@ module.exports = [].concat(
   require('./routers/other')
 )
 
-#  {
-#  #用户登录注册
-#    path: 'mine'
-#    suffix: false
-#    biz: 'member'
-#    methods:  post: 'addMember', put: '{signIn}', delete: '{signOut}', get: '{currentMember}', patch: 0
-#    anonymity: ['post', 'put']
-#  },
+#默认的路由，转到首页
+exports.initOtherwise = (app)->
+  target = _path.join __dirname, '../../', 'static/index.html'
+  console.log(target)
+  app.get '*', (req, res, next)-> res.sendfile target
+
+#初始化静态路由列表
+exports.initStatic = (app)->
+  _staticRouter.forEach (router)-> initStaticRouter app, router
 
 
-#  {
-#    #获取项目状态，及修改项目状态的路由
-#    path: 'project/:project_id/status'
-#    biz: 'project'
-#    suffix: false
-#    methods: get: 'getStatus', put: 'changeStatus', post: 0, delete: 0, patch: 0
-#  },
-#  {
-#    #发布项目
-#    path: 'project/:project_id/deploy'
-#    biz: 'project'
-#    suffix: false
-#    methods: post: '{deploy}', get: 0, delete: 0, patch: 0, put: 0
-#  },
-#  {
-#  #提交commit，用于git或svn提交commit时，自动获取commit并分析
-#    path: 'project/:project_id(\\d+)/git/tags'
-#    biz: 'gitlab'
-#    suffix: false
-#    methods: get: 'getTags', post: 0, delete: 0, patch: 0, put: 0
-#  },
-#  {
-#  #更改issue的状态，仅能更新
-#    path: 'project/:project_id/issue/:issue_id/status'
-#    biz: 'issue'
-#    suffix: false
-#    methods: get: 0, delete: 0,  post: 0, patch: 0, put: 'changeStatus'
-#  },
-#  {
-#    #更改issue的标签，仅支持更新
-#    path: 'project/:project_id/issue/:issue_id/tag'
-#    biz: 'issue'
-#    suffix: false
-#    methods: get: 0, delete: 0,  post: 0, patch: 0, put: 'changeTag'
-#  },
-#  {
-#    #更改issue的状态，仅能更新
-#    path: 'project/:project_id/issue/:issue_id/priority'
-#    biz: 'issue'
-#    suffix: false
-#    methods: get: 0, delete: 0,  post: 0, put: 'changePriority'
-#  },
-
-  ##========================报表相关========================
+#获取用户的基本信息
+exports.getMember = (req, cb)->
+  #读取token， 优先使用token
+  token = req.headers['x-token']
+  return getMemberWithToken token, cb if token
+  getMemberWithSession req, cb
