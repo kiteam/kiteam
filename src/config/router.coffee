@@ -2,6 +2,7 @@ _path = require("path")
 _entity = require '../entity'
 _staticRouter = require './routers/static'
 _common = require '../common'
+_ = require 'lodash'
 
 #获取静态文件的路径
 getStaticFile = (file)->
@@ -85,3 +86,11 @@ exports.getMember = (req, cb)->
   token = req.headers['x-token']
   return getMemberWithToken token, cb if token
   getMemberWithSession req, cb
+
+#路由级权限许可，仅请求访问权限， 不包含具体的数据权限，数据权限由程序自己处理
+exports.requestPermission = (client, router, action)->
+#允许匿名的路由或者用户已经登录，则允许访问
+  return true if client.member.isLogin or _.indexOf(router.anonymity || [], action) >= 0
+  #如果开启了访客模式，并且非强制登录的路由，允许用户访问
+  return true if _common.config.guestModel and _.indexOf(router.authorized || [], action) < 0
+  return false

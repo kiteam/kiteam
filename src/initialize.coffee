@@ -32,9 +32,7 @@ initBijou = (app)->
         cb null, client
     #请求访问许可
     requestPermission: (client, router, action, cb)->
-      allow =  _common.config.guestModel || #访客模式
-        _.indexOf(router.anonymity || [], action) >= 0 ||   #允许匿名访问
-        client.member.isLogin #用户已经登录
+      allow =  _routers.requestPermission client, router, action
       cb null, allow
 
   _bijou.initalize(app, options)
