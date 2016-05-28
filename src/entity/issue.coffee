@@ -165,7 +165,7 @@ class Issue extends _BaseEntity
     queue.push(
       (done)->
         countSql = sql.replace ':fields', 'count(id)'
-        entity = self.entity().knex.raw(countSql, [keyword, keyword])
+        entity = _knex.raw(countSql, [keyword, keyword])
         entity.exec (err, result)->
           return done err if err
 
@@ -182,7 +182,7 @@ class Issue extends _BaseEntity
                 				          (SELECT COUNT(*) FROM comment WHERE issue_id = issue.id) comment_count"
         sql += "ORDER BY always_top DESC, timestamp DESC limit #{pagination.limit} offset #{pagination.offset}"
         sql = sql.replace ':fields', fields
-        entity = self.entity().knex.raw(sql, [keyword, keyword])
+        entity = _knex.raw(sql, [keyword, keyword])
         entity.exec (err, result)->
           done err, count, result && result[0]
     )
@@ -208,7 +208,7 @@ class Issue extends _BaseEntity
     sql += 		               " A.timestamp BETWEEN #{start_time} AND #{end_time}"    if !assigned
     sql +=                " AND A.status <> 'trash' AND A.tag IN ('issue', 'form')"
 
-    @entity().knex.raw(sql).exec (err, result)->
+    _knex.raw(sql).exec (err, result)->
       return cb err if err
       cb err, result[0]
 
@@ -221,7 +221,7 @@ class Issue extends _BaseEntity
     sql +=                   " A.timestamp BETWEEN #{start_time} AND #{end_time}"    if !assigned
     sql +=                " AND A.status <> 'trash' "
     console.log sql
-    @entity().knex.raw(sql).exec (err, result)->
+    _knex.raw(sql).exec (err, result)->
       return cb err if err
       cb err, result[0]
 
