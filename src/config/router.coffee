@@ -91,6 +91,6 @@ exports.getMember = (req, cb)->
 exports.requestPermission = (client, router, action)->
 #允许匿名的路由或者用户已经登录，则允许访问
   return true if client.member.isLogin or _.indexOf(router.anonymity || [], action) >= 0
-  #如果开启了访客模式，并且非强制登录的路由，允许用户访问
-  return true if _common.config.guestModel and _.indexOf(router.authorized || [], action) < 0
+  #如果开启了访客模式，并且路由在许诺的列表内，允许用户访问
+  return true if _common.config.guestModel and _.indexOf(router.allowGuest || [], action) >= 0
   return false
